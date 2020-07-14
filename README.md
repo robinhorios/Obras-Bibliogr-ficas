@@ -43,7 +43,7 @@ Sample:
 
 Responses:
 
-* **201 created*** When the author names is created correctly
+* **201 created** When the author names is created correctly
 * **500 Internal Server Error** When there is a failure in the request format or the
   payload can't be unmarshaled.
 
