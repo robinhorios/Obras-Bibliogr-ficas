@@ -1,7 +1,8 @@
 class Api::V1::AuthorsController < ApplicationController
   def create
     ActiveRecord::Base.transaction do
-      @authors = Author.create(name_formatter)
+      @authors = 
+        Author.create(Authors::NameFormatter.call(author_params['names']))
     end
 
     render status: :created, json: @authors
@@ -15,9 +16,5 @@ class Api::V1::AuthorsController < ApplicationController
 
     def author_params
       params.require(:author).permit(names: [])
-    end
-
-    def name_formatter
-      Authors::NameFormatter.call(author_params['names'])
     end
 end
