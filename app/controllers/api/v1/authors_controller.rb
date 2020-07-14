@@ -1,23 +1,23 @@
 class Api::V1::AuthorsController < ApplicationController
-  def show
-    
-  end
-
-  def index
-    
-  end
-
   def create
-    
-  end
+    ActiveRecord::Base.transaction do
+      @authors = Author.create(name_formatter)
+    end
 
-  def method_name
-    
+    render status: :created, json: @authors
+  rescue ActiveRecord::RecordInvalid => error
+    render status: :unprocessable_entity, json: error.record.errors
+  rescue StandardError => error
+    render status: :internal_server_error, json: "Couldn't create authors, try later"
   end
 
   private
 
     def author_params
-     params.require(:author).permit(:first_name, :last_name, :phone, :formatted_name)
-   end
+      params.require(:author).permit(names: [])
+    end
+
+    def name_formatter
+      Authors::NameFormatter.call(author_params['names'])
+    end
 end
